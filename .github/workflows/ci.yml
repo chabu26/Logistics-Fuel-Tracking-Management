@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: timescale/timescaledb:2.17.2-pg16
+        env:
+          POSTGRES_USER: fleetfuel
+          POSTGRES_PASSWORD: fleetfuel
+          POSTGRES_DB: fleetfuel
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U fleetfuel"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://fleetfuel:fleetfuel@localhost:5432/fleetfuel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm test
+      - name: Migrate and seed
+        run: npm run db:migrate && npm run db:seed
+      - name: End-to-end check (simulated fleet through the API; fails if any staged incident is missed)
+        run: |
+          npm run start:api &
+          for i in $(seq 1 30); do curl -sf localhost:4000/health && break; sleep 1; done
+          npm run simulate -- --days 14 --api http://localhost:4000 --process

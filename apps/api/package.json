@@ -1,0 +1,24 @@
+{
+  "name": "@fleetfuel/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=../../.env src/server.ts",
+    "start": "tsx --env-file-if-exists=../../.env src/server.ts",
+    "migrate": "tsx --env-file-if-exists=../../.env src/migrate.ts",
+    "reset": "tsx --env-file-if-exists=../../.env src/reset.ts",
+    "seed": "tsx --env-file-if-exists=../../.env src/seed.ts"
+  },
+  "dependencies": {
+    "@fleetfuel/shared": "*",
+    "pg": "^8.13.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

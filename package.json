@@ -1,0 +1,29 @@
+{
+  "name": "fleet-fuel-platform",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fleet fuel monitoring SaaS: consumption by conditions, fuel reconciliation, loss detection",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p packages/shared && tsc -p apps/api && tsc -p apps/simulator",
+    "test": "tsx --test packages/shared/test/*.test.ts",
+    "db:up": "docker compose up -d db",
+    "db:migrate": "npm run migrate -w @fleetfuel/api",
+    "db:reset": "npm run reset -w @fleetfuel/api",
+    "db:seed": "npm run seed -w @fleetfuel/api",
+    "dev:api": "npm run dev -w @fleetfuel/api",
+    "start:api": "npm run start -w @fleetfuel/api",
+    "simulate": "npm run start -w @fleetfuel/simulator --"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
